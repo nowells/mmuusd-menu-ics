@@ -36,28 +36,8 @@ jobs:
           DISTRICT_ID: ${{ vars.DISTRICT_ID || 'd9bd5361-fbf3-ed11-84ae-8f8c34831c13' }}
         run: |
           mkdir -p _site
-          python generate_ical.py --output _site/school-menu.ics
-
-          # Also write a tiny index.html so Pages has a landing page
-          cat > _site/index.html <<'EOHTML'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head><meta charset="utf-8"><title>School Menu iCal Feed</title></head>
-          <body style="font-family:system-ui,sans-serif;max-width:600px;margin:4rem auto;padding:0 1rem">
-            <h1>School Menu iCal Feed</h1>
-            <p>Subscribe to this calendar in your calendar app:</p>
-            <pre id="url" style="background:#f3f3f3;padding:1rem;border-radius:6px;overflow-x:auto"></pre>
-            <p><a id="dl" href="school-menu.ics">Download .ics file</a></p>
-            <script>
-              // Build the webcal:// URL dynamically from the current page location
-              const base = location.href.replace(/index\.html$/, '').replace(/\/$/, '');
-              const icsUrl = base + '/school-menu.ics';
-              document.getElementById('url').textContent = icsUrl.replace(/^https?/, 'webcal');
-              document.getElementById('dl').href = 'school-menu.ics';
-            </script>
-          </body>
-          </html>
-          EOHTML
+          python generate_ical.py --output _site/chms.ics
+          cp index.html _site/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

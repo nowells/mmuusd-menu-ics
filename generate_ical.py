@@ -22,9 +22,9 @@ from icalendar import Calendar, Event
 DEFAULT_BUILDING_ID = "930a6424-06f4-ed11-84af-fa270f46f553"
 DEFAULT_DISTRICT_ID = "d9bd5361-fbf3-ed11-84ae-8f8c34831c13"
 API_BASE = "https://api.linqconnect.com/api/FamilyMenu"
-LOOKBACK_DAYS = 14       # include recent past so the calendar isn't empty if you subscribe mid-week
-LOOKAHEAD_DAYS = 90      # ~3 months ahead — the API usually only has data a few weeks out
-OUTPUT_FILE = "school-menu.ics"
+LOOKBACK_DAYS = 7       # include recent past so the calendar isn't empty if you subscribe mid-week
+LOOKAHEAD_DAYS = 21      # ~3 months ahead — the API usually only has data a few weeks out
+OUTPUT_FILE = "chms.ics"
 
 
 def parse_args():

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CHMS School Menu Calendar</title>
+  <style>
+    :root { --accent: #2563eb; --bg: #f8fafc; --card: #fff; --text: #1e293b; --muted: #64748b; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem 1rem; }
+    .container { max-width: 640px; margin: 0 auto; }
+    h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .subtitle { color: var(--muted); margin-bottom: 2rem; }
+    .card { background: var(--card); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .card h2 { font-size: 1.15rem; margin-bottom: 0.75rem; }
+    .url-box { background: #f1f5f9; padding: 0.75rem 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; word-break: break-all; cursor: pointer; position: relative; transition: background 0.15s; }
+    .url-box:hover { background: #e2e8f0; }
+    .url-box::after { content: "click to copy"; position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); font-family: system-ui, sans-serif; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .url-box.copied::after { content: "copied!"; color: #16a34a; }
+    .btn { display: inline-block; background: var(--accent); color: #fff; padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 500; margin-top: 0.5rem; transition: opacity 0.15s; }
+    .btn:hover { opacity: 0.85; }
+    .btn-secondary { background: #e2e8f0; color: var(--text); }
+    .steps { padding-left: 1.25rem; }
+    .steps li { margin-bottom: 0.5rem; }
+    .steps code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    .platform { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-weight: 600; }
+    hr { border: none; border-top: 1px solid #e2e8f0; margin: 1rem 0; }
+    footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 2rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CHMS School Menu Calendar</h1>
+    <p class="subtitle">Subscribe to the daily school lunch and breakfast menu in your calendar app. Updated automatically every day.</p>
+
+    <div class="card">
+      <h2>Subscribe to Calendar</h2>
+      <p style="margin-bottom:0.75rem">Use this URL to subscribe. Your calendar app will automatically receive menu updates:</p>
+      <div class="url-box" id="webcal-url" role="button" tabindex="0"></div>
+      <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap">
+        <a class="btn" id="webcal-link" href="#">Open in Calendar App</a>
+        <a class="btn btn-secondary" id="dl-link" href="chms.ics">Download .ics file</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>How to Subscribe</h2>
+
+      <div class="platform">Apple Calendar (macOS / iOS)</div>
+      <ol class="steps">
+        <li>Click the <strong>"Open in Calendar App"</strong> button above, or</li>
+        <li>Open Calendar &rarr; <code>File</code> &rarr; <code>New Calendar Subscription...</code></li>
+        <li>Paste the subscription URL shown above</li>
+        <li>Set auto-refresh to <strong>Every day</strong> and click Subscribe</li>
+      </ol>
+
+      <hr>
+
+      <div class="platform">Google Calendar</div>
+      <ol class="steps">
+        <li>Open <a href="https://calendar.google.com" target="_blank">Google Calendar</a></li>
+        <li>Click the <strong>+</strong> next to "Other calendars" in the left sidebar</li>
+        <li>Select <strong>"From URL"</strong></li>
+        <li>Paste the <strong>https://</strong> version of the URL above (not webcal://)</li>
+        <li>Click <strong>"Add calendar"</strong></li>
+      </ol>
+      <p style="margin-top:0.5rem; font-size:0.85rem; color:var(--muted)">Note: Google Calendar may take up to 24 hours to refresh subscription calendars.</p>
+
+      <hr>
+
+      <div class="platform">Outlook / Microsoft 365</div>
+      <ol class="steps">
+        <li>Open Outlook Calendar</li>
+        <li>Click <strong>"Add calendar"</strong> &rarr; <strong>"Subscribe from web"</strong></li>
+        <li>Paste the subscription URL shown above</li>
+        <li>Name the calendar and click <strong>"Import"</strong></li>
+      </ol>
+    </div>
+
+    <div class="card" style="font-size:0.9rem; color:var(--muted)">
+      <p>This calendar is generated daily from the <a href="https://linqconnect.com" target="_blank">LinqConnect</a> school menu system. Events appear as all-day entries with the meal type and menu items listed.</p>
+    </div>
+
+    <footer>
+      <p>Menu data sourced from LinqConnect. Calendar regenerated daily via GitHub Actions.</p>
+    </footer>
+  </div>
+
+  <script>
+    const base = location.href.replace(/index\.html$/, '').replace(/\/$/, '');
+    const icsHttps = base + '/chms.ics';
+    const icsWebcal = icsHttps.replace(/^https?/, 'webcal');
+
+    document.getElementById('webcal-url').textContent = icsWebcal;
+    document.getElementById('webcal-link').href = icsWebcal;
+    document.getElementById('dl-link').href = 'chms.ics';
+
+    document.getElementById('webcal-url').addEventListener('click', function () {
+      navigator.clipboard.writeText(icsWebcal).then(() => {
+        this.classList.add('copied');
+        setTimeout(() => this.classList.remove('copied'), 2000);
+      });
+    });
+  </script>
+</body>
+</html>
